@@ -91,3 +91,34 @@ colladaLoader.load("duck.dae", function (colladaModel) {
     colladaModel.scale = 9000;
     modelLayer.addRenderable(colladaModel);
 });
+
+// Accessing a map imagery service (WMS "Web Map Service")
+// visualize imagery over the globe of the average temperature over land
+
+// Retrieved an imagery layer from NASA Earth Observations WMS
+var serviceAddress = "https://neo.sci.gsfc.nasa.gov/wms/wms?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0";
+
+var layerName = "MOD_LSTD_CLIM_M"; // Average Temperature Data
+
+/*
+** Creates a WmsCapabilities object from the XML document.
+** Retrieves a WmsLayerCapabilities object by the desired layer name.
+** Constructs a configuration object from the WmsLayerCapabilities object.
+** Creates the WMS Layer from the configuration object.
+** Adds the layer to the WorldWindow.
+*/
+var createLayer = function (xmlDom) {
+    var wms = new WorldWind.WmsCapabilities(xmlDom);
+    var wmsLayerCapabilities = wms.getNamedLayer(layerName);
+    var wmsConfig = WorldWind.WmsLayer.formLayerConfiguration(wmsLayerCapabilities);
+    var wmsLayer = new WorldWind.WmsLayer(wmsConfig);
+    wwd.addLayer(wmsLayer);
+};
+
+// Handle possible errors that may occur is something fails during the WMS request
+var logError = function (jqXhr, text, exception) {
+    console.log("There was a failure retrieving the capabilities document: " +
+        text +
+    " exception: " + exception);
+};
+$.get(serviceAddress).done(createLayer).fail(logError);
