@@ -53,3 +53,28 @@ placemark.label = "Red Sea\n" +
 placemark.alwaysOnTop = true;
 
 placemarkLayer.addRenderable(placemark);
+
+// Displaying 3D shapes
+var polygonLayer = new WorldWind.RenderableLayer();
+wwd.addLayer(polygonLayer);
+
+var polygonAttributes = new WorldWind.ShapeAttributes(null);
+polygonAttributes.interiorColor = new WorldWind.Color(0, 1, 1, 0.75);
+polygonAttributes.outlineColor = WorldWind.Color.BLUE;
+polygonAttributes.drawOutline = true;
+polygonAttributes.applyLighting = true;
+
+var boundaries = [];
+boundaries.push(new WorldWind.Position(22.0, 4.0, 700000.0));
+boundaries.push(new WorldWind.Position(22.0, 20.0, 700000.0));
+boundaries.push(new WorldWind.Position(13.0, 20.0, 700000.0));
+boundaries.push(new WorldWind.Position(13.0, 4.0, 700000.0));
+
+/*
+** we displayed our shape as an extrusion from the surface of the Earth,
+** and we use the polygon.extrude attribute set to true for this.
+** If set to false, we would see a hovering triangle without thickness instead.
+*/
+var polygon = new WorldWind.Polygon(boundaries, polygonAttributes);
+polygon.extrude = true;
+polygonLayer.addRenderable(polygon);
