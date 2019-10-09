@@ -78,3 +78,16 @@ boundaries.push(new WorldWind.Position(13.0, 4.0, 700000.0));
 var polygon = new WorldWind.Polygon(boundaries, polygonAttributes);
 polygon.extrude = true;
 polygonLayer.addRenderable(polygon);
+
+// Add a COLLADA model
+var modelLayer = new WorldWind.RenderableLayer();
+wwd.addLayer(modelLayer);
+
+var position = new WorldWind.Position(1, .5, 800000.0);
+var config = {dirPath: WorldWind.configuration.baseUrl + 'examples/collada_models/duck/'};
+var colladaLoader = new WorldWind.ColladaLoader(position, config);
+
+colladaLoader.load("duck.dae", function (colladaModel) {
+    colladaModel.scale = 9000;
+    modelLayer.addRenderable(colladaModel);
+});
